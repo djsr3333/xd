@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Detector de Color Mejorado</title>
+  <title>Detector de Color (7x7 con más naranjas)</title>
   <style>
     video, canvas { display: block; margin: auto; }
     #colorInfo { text-align: center; font-size: 20px; margin-top: 10px; }
@@ -18,57 +18,85 @@
     const ctx = canvas.getContext('2d');
     const colorInfo = document.getElementById('colorInfo');
 
-    // Paleta extendida de colores
+    // 🎨 Paleta extendida con más tonos de naranja
     const colores = [
-      { nombre: "Rojo oscuro", r: 139, g: 0, b: 0 },
-      { nombre: "Rojo cereza", r: 220, g: 20, b: 60 },
-      { nombre: "Rojo tomate", r: 255, g: 99, b: 71 },
-      { nombre: "Rojo brillante", r: 255, g: 0, b: 0 },
-      { nombre: "Rojo coral", r: 240, g: 128, b: 128 },
-      { nombre: "Rojo indio", r: 205, g: 92, b: 92 },
-      { nombre: "Escarlata", r: 255, g: 36, b: 0 },
-      { nombre: "Carmesí", r: 220, g: 20, b: 60 },
-      { nombre: "Borgoña", r: 128, g: 0, b: 32 },
-      { nombre: "Rosa", r: 255, g: 192, b: 203 },
-      { nombre: "Rosa fuerte", r: 255, g: 20, b: 147 },
-      { nombre: "Fucsia", r: 255, g: 0, b: 255 },
-      { nombre: "Magenta", r: 255, g: 0, b: 255 },
-      { nombre: "Naranja", r: 255, g: 165, b: 0 },
-      { nombre: "Naranja oscuro", r: 255, g: 140, b: 0 },
-      { nombre: "Melocotón", r: 255, g: 218, b: 185 },
-      { nombre: "Amarillo", r: 255, g: 255, b: 0 },
-      { nombre: "Oro", r: 255, g: 215, b: 0 },
-      { nombre: "Caqui", r: 240, g: 230, b: 140 },
-      { nombre: "Verde claro", r: 144, g: 238, b: 144 },
-      { nombre: "Verde lima", r: 0, g: 255, b: 0 },
-      { nombre: "Verde bosque", r: 34, g: 139, b: 34 },
-      { nombre: "Verde oliva", r: 107, g: 142, b: 35 },
-      { nombre: "Verde menta", r: 152, g: 255, b: 152 },
-      { nombre: "Turquesa", r: 64, g: 224, b: 208 },
-      { nombre: "Aguamarina", r: 127, g: 255, b: 212 },
-      { nombre: "Cian", r: 0, g: 255, b: 255 },
-      { nombre: "Azul cielo", r: 135, g: 206, b: 235 },
-      { nombre: "Azul claro", r: 173, g: 216, b: 230 },
-      { nombre: "Azul", r: 0, g: 0, b: 255 },
-      { nombre: "Azul real", r: 65, g: 105, b: 225 },
-      { nombre: "Azul oscuro", r: 0, g: 0, b: 139 },
-      { nombre: "Azul marino", r: 0, g: 0, b: 128 },
-      { nombre: "Púrpura", r: 128, g: 0, b: 128 },
-      { nombre: "Violeta", r: 238, g: 130, b: 238 },
-      { nombre: "Lavanda", r: 230, g: 230, b: 250 },
-      { nombre: "Marrón", r: 165, g: 42, b: 42 },
-      { nombre: "Chocolate", r: 210, g: 105, b: 30 },
-      { nombre: "Café", r: 139, g: 69, b: 19 },
-      { nombre: "Beige", r: 245, g: 245, b: 220 },
-      { nombre: "Gris claro", r: 211, g: 211, b: 211 },
-      { nombre: "Gris", r: 128, g: 128, b: 128 },
-      { nombre: "Gris oscuro", r: 105, g: 105, b: 105 },
-      { nombre: "Negro", r: 0, g: 0, b: 0 },
-      { nombre: "Blanco", r: 255, g: 255, b: 255 }
-      // Puedes seguir agregando más colores aquí si lo deseas
-    ];
+  // ROJOS
+  { nombre: "Rojo brillante", r: 255, g: 0, b: 0 },
+  { nombre: "Rojo oscuro", r: 139, g: 0, b: 0 },
+  { nombre: "Rojo indio", r: 205, g: 92, b: 92 },
+  { nombre: "Carmesí", r: 220, g: 20, b: 60 },
+  { nombre: "Escarlata", r: 255, g: 36, b: 0 },
+  { nombre: "Borgoña", r: 128, g: 0, b: 32 },
+  { nombre: "Tomate", r: 255, g: 99, b: 71 },
+  { nombre: "Coral", r: 255, g: 127, b: 80 },
+  { nombre: "Rosa fuerte", r: 255, g: 20, b: 147 },
+  { nombre: "Rosa claro", r: 255, g: 182, b: 193 },
 
-    // Función para encontrar el color más cercano
+  // NARANJAS
+  { nombre: "Naranja brillante", r: 255, g: 165, b: 0 },
+  { nombre: "Naranja oscuro", r: 255, g: 140, b: 0 },
+  { nombre: "Mandarina", r: 255, g: 117, b: 24 },
+  { nombre: "Durazno", r: 255, g: 204, b: 153 },
+  { nombre: "Ámbar", r: 255, g: 191, b: 0 },
+
+  // AMARILLOS
+  { nombre: "Amarillo", r: 255, g: 255, b: 0 },
+  { nombre: "Oro", r: 255, g: 215, b: 0 },
+  { nombre: "Caqui", r: 240, g: 230, b: 140 },
+  { nombre: "Limón", r: 253, g: 233, b: 16 },
+  { nombre: "Maíz", r: 251, g: 236, b: 93 },
+
+  // VERDES
+  { nombre: "Verde", r: 0, g: 128, b: 0 },
+  { nombre: "Verde claro", r: 144, g: 238, b: 144 },
+  { nombre: "Verde lima", r: 0, g: 255, b: 0 },
+  { nombre: "Verde menta", r: 152, g: 255, b: 152 },
+  { nombre: "Verde esmeralda", r: 80, g: 200, b: 120 },
+
+  // AZULES
+  { nombre: "Azul", r: 0, g: 0, b: 255 },
+  { nombre: "Azul claro", r: 173, g: 216, b: 230 },
+  { nombre: "Azul real", r: 65, g: 105, b: 225 },
+  { nombre: "Azul marino", r: 0, g: 0, b: 128 },
+  { nombre: "Celeste", r: 135, g: 206, b: 235 },
+  { nombre: "Turquesa", r: 64, g: 224, b: 208 },
+  { nombre: "Cian", r: 0, g: 255, b: 255 },
+
+  // MORADOS Y VIOLETAS
+  { nombre: "Púrpura", r: 128, g: 0, b: 128 },
+  { nombre: "Violeta", r: 238, g: 130, b: 238 },
+  { nombre: "Lavanda", r: 230, g: 230, b: 250 },
+  { nombre: "Magenta", r: 255, g: 0, b: 255 },
+
+  // MARRONES Y NEUTROS
+  { nombre: "Marrón", r: 165, g: 42, b: 42 },
+  { nombre: "Chocolate", r: 210, g: 105, b: 30 },
+  { nombre: "Café", r: 139, g: 69, b: 19 },
+  { nombre: "Beige", r: 245, g: 245, b: 220 },
+  { nombre: "Gris", r: 128, g: 128, b: 128 },
+  { nombre: "Gris claro", r: 211, g: 211, b: 211 },
+  { nombre: "Gris oscuro", r: 105, g: 105, b: 105 },
+  { nombre: "Negro", r: 0, g: 0, b: 0 },
+  { nombre: "Blanco", r: 255, g: 255, b: 255 }
+];
+
+    // 🎯 Calcular promedio RGB
+    function obtenerColorPromedio(data) {
+      let totalR = 0, totalG = 0, totalB = 0;
+      const pixels = data.data.length / 4;
+      for (let i = 0; i < data.data.length; i += 4) {
+        totalR += data.data[i];
+        totalG += data.data[i + 1];
+        totalB += data.data[i + 2];
+      }
+      return {
+        r: Math.round(totalR / pixels),
+        g: Math.round(totalG / pixels),
+        b: Math.round(totalB / pixels)
+      };
+    }
+
+    // 🔍 Color más cercano
     function obtenerColorMasCercano(r, g, b) {
       let distanciaMinima = Infinity;
       let colorMasCercano = "Desconocido";
@@ -86,16 +114,20 @@
       return colorMasCercano;
     }
 
-    // Obtener cámara
+    // 📷 Captura de video y análisis 7x7
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         video.srcObject = stream;
         video.addEventListener('play', () => {
           setInterval(() => {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const frame = ctx.getImageData(canvas.width/2, canvas.height/2, 1, 1).data;
-            const nombreColor = obtenerColorMasCercano(frame[0], frame[1], frame[2]);
-            colorInfo.textContent = `Color detectado: ${nombreColor} (RGB: ${frame[0]}, ${frame[1]}, ${frame[2]})`;
+            const region = 7; // 👉 Área de 7x7 píxeles
+            const x = canvas.width / 2 - region / 2;
+            const y = canvas.height / 2 - region / 2;
+            const imageData = ctx.getImageData(x, y, region, region);
+            const promedio = obtenerColorPromedio(imageData);
+            const nombreColor = obtenerColorMasCercano(promedio.r, promedio.g, promedio.b);
+            colorInfo.textContent = `Color: ${nombreColor} (RGB: ${promedio.r}, ${promedio.g}, ${promedio.b})`;
           }, 500);
         });
       })
@@ -105,3 +137,4 @@
   </script>
 </body>
 </html>
+
