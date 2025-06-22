@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Detector de Color Mejorado</title>
+  <style>
+    video, canvas { display: block; margin: auto; }
+    #colorInfo { text-align: center; font-size: 20px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <video id="video" width="400" autoplay></video>
+  <canvas id="canvas" width="400" height="300" style="display:none;"></canvas>
+  <div id="colorInfo">Detectando color...</div>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const colorInfo = document.getElementById('colorInfo');
+
+    // Paleta extendida de colores
+    const colores = [
+      { nombre: "Rojo oscuro", r: 139, g: 0, b: 0 },
+      { nombre: "Rojo cereza", r: 220, g: 20, b: 60 },
+      { nombre: "Rojo tomate", r: 255, g: 99, b: 71 },
+      { nombre: "Rojo brillante", r: 255, g: 0, b: 0 },
+      { nombre: "Rojo coral", r: 240, g: 128, b: 128 },
+      { nombre: "Rojo indio", r: 205, g: 92, b: 92 },
+      { nombre: "Escarlata", r: 255, g: 36, b: 0 },
+      { nombre: "Carmesí", r: 220, g: 20, b: 60 },
+      { nombre: "Borgoña", r: 128, g: 0, b: 32 },
+      { nombre: "Rosa", r: 255, g: 192, b: 203 },
+      { nombre: "Rosa fuerte", r: 255, g: 20, b: 147 },
+      { nombre: "Fucsia", r: 255, g: 0, b: 255 },
+      { nombre: "Magenta", r: 255, g: 0, b: 255 },
+      { nombre: "Naranja", r: 255, g: 165, b: 0 },
+      { nombre: "Naranja oscuro", r: 255, g: 140, b: 0 },
+      { nombre: "Melocotón", r: 255, g: 218, b: 185 },
+      { nombre: "Amarillo", r: 255, g: 255, b: 0 },
+      { nombre: "Oro", r: 255, g: 215, b: 0 },
+      { nombre: "Caqui", r: 240, g: 230, b: 140 },
+      { nombre: "Verde claro", r: 144, g: 238, b: 144 },
+      { nombre: "Verde lima", r: 0, g: 255, b: 0 },
+      { nombre: "Verde bosque", r: 34, g: 139, b: 34 },
+      { nombre: "Verde oliva", r: 107, g: 142, b: 35 },
+      { nombre: "Verde menta", r: 152, g: 255, b: 152 },
+      { nombre: "Turquesa", r: 64, g: 224, b: 208 },
+      { nombre: "Aguamarina", r: 127, g: 255, b: 212 },
+      { nombre: "Cian", r: 0, g: 255, b: 255 },
+      { nombre: "Azul cielo", r: 135, g: 206, b: 235 },
+      { nombre: "Azul claro", r: 173, g: 216, b: 230 },
+      { nombre: "Azul", r: 0, g: 0, b: 255 },
+      { nombre: "Azul real", r: 65, g: 105, b: 225 },
+      { nombre: "Azul oscuro", r: 0, g: 0, b: 139 },
+      { nombre: "Azul marino", r: 0, g: 0, b: 128 },
+      { nombre: "Púrpura", r: 128, g: 0, b: 128 },
+      { nombre: "Violeta", r: 238, g: 130, b: 238 },
+      { nombre: "Lavanda", r: 230, g: 230, b: 250 },
+      { nombre: "Marrón", r: 165, g: 42, b: 42 },
+      { nombre: "Chocolate", r: 210, g: 105, b: 30 },
+      { nombre: "Café", r: 139, g: 69, b: 19 },
+      { nombre: "Beige", r: 245, g: 245, b: 220 },
+      { nombre: "Gris claro", r: 211, g: 211, b: 211 },
+      { nombre: "Gris", r: 128, g: 128, b: 128 },
+      { nombre: "Gris oscuro", r: 105, g: 105, b: 105 },
+      { nombre: "Negro", r: 0, g: 0, b: 0 },
+      { nombre: "Blanco", r: 255, g: 255, b: 255 }
+      // Puedes seguir agregando más colores aquí si lo deseas
+    ];
+
+    // Función para encontrar el color más cercano
+    function obtenerColorMasCercano(r, g, b) {
+      let distanciaMinima = Infinity;
+      let colorMasCercano = "Desconocido";
+      colores.forEach(color => {
+        const distancia = Math.sqrt(
+          (color.r - r) ** 2 +
+          (color.g - g) ** 2 +
+          (color.b - b) ** 2
+        );
+        if (distancia < distanciaMinima) {
+          distanciaMinima = distancia;
+          colorMasCercano = color.nombre;
+        }
+      });
+      return colorMasCercano;
+    }
+
+    // Obtener cámara
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+        video.addEventListener('play', () => {
+          setInterval(() => {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const frame = ctx.getImageData(canvas.width/2, canvas.height/2, 1, 1).data;
+            const nombreColor = obtenerColorMasCercano(frame[0], frame[1], frame[2]);
+            colorInfo.textContent = `Color detectado: ${nombreColor} (RGB: ${frame[0]}, ${frame[1]}, ${frame[2]})`;
+          }, 500);
+        });
+      })
+      .catch(err => {
+        console.error("Error al acceder a la cámara:", err);
+      });
+  </script>
+</body>
+</html>
